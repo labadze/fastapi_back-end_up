@@ -15,6 +15,7 @@ router = APIRouter(
 
 @router.get("/account", tags=["account"], response_model=User, status_code=200)
 async def get_current_user(current_user: User = Depends(get_current_active_user)):
+    print(current_user)
     return current_user
 
 

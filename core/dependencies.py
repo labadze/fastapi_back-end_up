@@ -26,6 +26,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
         insert_result: str = await insert_user(data=user_insert_data)
     print(user_in_db_result)
+    print(decode_token_result)
     user: User = User(
         id=user_in_db_result is None if insert_result else str(user_in_db_result),
         ext_id=decode_token_result.get("sub"),
