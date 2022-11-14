@@ -49,12 +49,10 @@ async def make_token_dead(data: DestroyTokenInsertSchema) -> None:
 
 
 async def retrieve_items(limit: int, offset: int) -> list[ItemResponseCollectionBase]:
-    query = """SELECT * FROM items ORDER BY created_at DESC limit :limit_value offset :offet_value;"""
-    values = {
-        "limit_value": limit,
-        "offset_value": offset
-    }
-    result = await database.execute(query=query, values=values)
+    query = """SELECT * FROM items ORDER BY created_at DESC;"""
+    values = {}
+    result = await database.fetch_all(query=query, values=values)
+    print(result)
     return result
 
 
@@ -63,7 +61,7 @@ async def fetch_item(item_id: str) -> Union[ItemResponseCollectionBase, None]:
     values = {
         "item_id": item_id,
     }
-    result = await database.execute(query=query, values=values)
+    result = await database.fetch_one(query=query, values=values)
     return result
 
 
