@@ -1,9 +1,9 @@
-from fastapi import Depends, HTTPException, Header
+from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordBearer
 from starlette import status
 
-from core.schemas import User, UserBase, UserInsert
+from core.schemas import User, UserInsert
 from core.utils import decode_token
 from db.db_ops import fetch_user_by_ext_id, insert_user
 
