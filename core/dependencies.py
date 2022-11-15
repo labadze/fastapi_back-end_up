@@ -13,26 +13,25 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-    insert_result = str()
+    # insert_result = str()
     decode_token_result = await decode_token(token)
     # ' '.join(words)
-    user_in_db_result = await fetch_user_by_ext_id(ext_id=decode_token_result.get("sub"))
-    if user_in_db_result is None:
-        user_insert_data = UserInsert(
-            ext_id=decode_token_result.get("sub"),
-            user_name=decode_token_result.get("preferred_username"),
-            display_name=decode_token_result.get("preferred_username"),
-            is_active=True,
-        )
-        insert_result: str = await insert_user(data=user_insert_data)
-    print(user_in_db_result)
-    print(decode_token_result)
+    # user_in_db_result = await fetch_user_by_ext_id(ext_id=decode_token_result.get("sub"))
+    # if user_in_db_result is None:
+    #     user_insert_data = UserInsert(
+    #         ext_id=decode_token_result.get("sub"),
+    #         user_name=decode_token_result.get("preferred_username"),
+    #         display_name=decode_token_result.get("preferred_username"),
+    #         is_active=True,
+    #     )
+    #     insert_result: str = await insert_user(data=user_insert_data)
     user: User = User(
-        id=user_in_db_result is None if insert_result else str(user_in_db_result),
+        # id=user_in_db_result is None if insert_result else str(user_in_db_result),
+        id=decode_token_result.get("sub"),
         ext_id=decode_token_result.get("sub"),
         display_name=decode_token_result.get("preferred_username"),
         roles=decode_token_result.get("realm_access").get("roles"),
-        is_active=False,
+        is_active=True,
         user_name=decode_token_result.get("preferred_username"))
     if not user:
         raise HTTPException(
@@ -44,6 +43,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
-    if current_user.is_active:
+    if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

@@ -1,5 +1,7 @@
 from typing import Union
 
+from fastapi.encoders import jsonable_encoder
+
 from core.database import database
 from core.schemas import ItemInsertSchema, ItemUpdateSchema, ItemResponseCollectionBase, UserBase, \
     DestroyTokenInsertSchema, UserInsert
@@ -52,8 +54,7 @@ async def retrieve_items(limit: int, offset: int) -> list[ItemResponseCollection
     query = """SELECT * FROM items ORDER BY created_at DESC;"""
     values = {}
     result = await database.fetch_all(query=query, values=values)
-    print(result)
-    return result
+    return jsonable_encoder(result)
 
 
 async def fetch_item(item_id: str) -> Union[ItemResponseCollectionBase, None]:
